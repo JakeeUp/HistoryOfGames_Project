@@ -18,8 +18,9 @@ public class Player1Move : MonoBehaviour
     [Header("Bools")]
     [SerializeField] private bool _canWalkLeft = true;
     [SerializeField] private bool _canWalkRight = true;
-    [SerializeField] private bool _facingLeft = true;
-    [SerializeField] private bool _facingRight = false;
+    public static bool _facingLeft = false;
+    public static bool _facingRight = true;
+    
 
     [Header("GameObjects")] 
     public GameObject player1;
