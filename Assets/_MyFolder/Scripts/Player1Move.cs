@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Animations;
 using UnityEngine;
@@ -28,14 +29,23 @@ public class Player1Move : MonoBehaviour
 
 
     public Vector3 oppPosition;
-    
-    
+
+    [Header("AudioClips")] 
+    public AudioClip LightPunch;
+    public AudioClip HeavyPunch;
+    public AudioClip LightKick;
+    public AudioClip HeavyKick;
+    private AudioSource MyPlayer;
 
 
     private static readonly int Forward = Animator.StringToHash("Forward");
     private static readonly int Backward = Animator.StringToHash("Backward");
     private static readonly int Jump = Animator.StringToHash("Jump");
     private static readonly int Crouch = Animator.StringToHash("Crouch");
+    private static readonly int HeadReact = Animator.StringToHash("HeadReact");
+    private static readonly int BigReact = Animator.StringToHash("BigReact");
+    private static readonly int KnockedOut = Animator.StringToHash("KnockedOut");
+    private static readonly int KnockOut = Animator.StringToHash("KnockOut");
 
     // Start is called before the first frame update
     void Start()
@@ -43,6 +53,7 @@ public class Player1Move : MonoBehaviour
        
         Anim = GetComponentInChildren<Animator>();
         StartCoroutine(FaceRight());
+        MyPlayer = GetComponentInChildren<AudioSource>();
     }
 
     // Update is called once per frame
@@ -150,6 +161,36 @@ public class Player1Move : MonoBehaviour
         //Listen to the Animaior
         Player1Layer0 = Anim.GetCurrentAnimatorStateInfo(0);
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("FistLight"))
+        {
+            Anim.SetTrigger("BigReact");
+            MyPlayer.clip = LightPunch;
+            MyPlayer.Play();
+        }
+        if (other.gameObject.CompareTag("FistHeavy"))
+        {
+            Anim.SetTrigger("HeadReact");
+            MyPlayer.clip = HeavyPunch;
+            MyPlayer.Play();
+        }
+        if (other.gameObject.CompareTag("KickHeavy"))
+        {
+            Anim.SetTrigger("BigReact");
+            MyPlayer.clip = HeavyKick;
+            MyPlayer.Play();
+        }
+
+        if (other.gameObject.CompareTag("KickLight"))
+        {
+            Anim.SetTrigger("HeadReact");
+            MyPlayer.clip = LightKick;
+            MyPlayer.Play();
+        }
+    }
+
 
     IEnumerator JumpPause()
     {
