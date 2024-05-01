@@ -15,6 +15,12 @@ public class Player1Move : MonoBehaviour
     private bool _isJumping = false;
 
     private AnimatorStateInfo Player1Layer0;
+    public Rigidbody RB;
+    public Collider BoxCollider;
+    public Collider CapsuleCollider;
+    public float JumpSpeed = 0.05f;
+    private float MoveSpeed;
+    
 
     [Header("Bools")]
     [SerializeField] private bool _canWalkLeft = true;
@@ -55,11 +61,21 @@ public class Player1Move : MonoBehaviour
         Anim = GetComponentInChildren<Animator>();
         StartCoroutine(FaceRight());
         MyPlayer = GetComponentInChildren<AudioSource>();
+        MoveSpeed = walkSpeed;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Player1Actions.FlyingJumpP1 == true)
+        {
+            walkSpeed = JumpSpeed;
+        }
+        else
+        {
+            walkSpeed = MoveSpeed;
+        }
+        
         //check if dead
         if (SaveScript.Player1Health <= 0)
         {
@@ -68,6 +84,16 @@ public class Player1Move : MonoBehaviour
             StartCoroutine(KnockedOut());
             //this.GetComponent<Player1Move>().enabled = false;
         }
+
+        if (SaveScript.Player2Health <= 0)
+        {
+            Anim.SetTrigger("Victory");
+            player1.GetComponent<Player1Actions>().enabled = false;
+            this.GetComponent<Player1Move>().enabled = false;
+        }
+        
+        
+        
         AnimatorListener();
         CantExitScreenBounds();
         PlayerMovement();
@@ -91,6 +117,19 @@ public class Player1Move : MonoBehaviour
         {
             _walkLeftP1 = true;
             _walkRightP1 = true;
+        }
+
+        if (Player1Layer0.IsTag("Block"))
+        {
+            RB.isKinematic = true;
+            BoxCollider.enabled = false;
+            CapsuleCollider.enabled = false;
+        }
+        else
+        {
+            BoxCollider.enabled = true;
+            CapsuleCollider.enabled = true;
+            RB.isKinematic = false;
         }
     }
 

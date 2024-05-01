@@ -14,7 +14,7 @@ public class Player2Actions : MonoBehaviour
     public static bool Hits = false;
     public AudioClip punchSound;
     public AudioClip kickSound;
-    
+    public static bool FlyingJumpP2 = false;
     [Header("Jump Attributes")]
     public float jumpSpeed = 0.05f;
 
@@ -145,14 +145,17 @@ public class Player2Actions : MonoBehaviour
     public void FlipUp()
     {
         Player1.transform.Translate(0,flipSpeed,0);
-        Player1.transform.Translate(0.1f,0,0);
+        FlyingJumpP2 = true;
     }
     public void FlipBack()
     {
         Player1.transform.Translate(0,flipSpeed,0);
-        Player1.transform.Translate(-0.1f,0,0);
+        FlyingJumpP2 = true;
     }
-
+    public void IdleSpeed()
+    {
+        FlyingJumpP2 = false;
+    }
     public void PunchSoundEffect()
     {
         MyPlayer.clip = punchSound;

@@ -14,6 +14,8 @@ public class Player1Actions : MonoBehaviour
     private AudioSource MyPlayer;
     public AudioClip punchSound;
     public AudioClip kickSound;
+
+    public static bool FlyingJumpP1 = false;
     
     [Header("Jump Attributes")]
     public float jumpSpeed = 0.05f;
@@ -36,6 +38,8 @@ public class Player1Actions : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+       
+        
         //heavy punch slide
         if (_heavyMoving == true)
         {
@@ -140,14 +144,18 @@ public class Player1Actions : MonoBehaviour
     public void FlipUp()
     {
         Player1.transform.Translate(0,jumpSpeed,0);
-        Player1.transform.Translate(0.1f,0,0);
+        FlyingJumpP1 = true;
     }
     public void FlipBack()
     {
         Player1.transform.Translate(0,jumpSpeed,0);
-        Player1.transform.Translate(-0.1f,0,0);
+        FlyingJumpP1 = true;
     }
 
+    public void IdleSpeed()
+    {
+        FlyingJumpP1 = false;
+    }
     public void PunchSoundEffect()
     {
         MyPlayer.clip = punchSound;
