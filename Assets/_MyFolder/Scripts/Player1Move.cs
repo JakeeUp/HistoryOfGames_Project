@@ -21,12 +21,14 @@ public class Player1Move : MonoBehaviour
     [SerializeField] private bool _canWalkRight = true;
     public static bool _facingLeft = false;
     public static bool _facingRight = true;
+    [SerializeField]public static bool _walkLeftP1 = true;
+    [SerializeField]public static bool _walkRightP1 = true;
     
 
     [Header("GameObjects")] 
     public GameObject player1;
     public GameObject opponent;
-
+    public GameObject Restrict;
 
     public Vector3 oppPosition;
 
@@ -44,8 +46,7 @@ public class Player1Move : MonoBehaviour
     private static readonly int Crouch = Animator.StringToHash("Crouch");
     private static readonly int HeadReact = Animator.StringToHash("HeadReact");
     private static readonly int BigReact = Animator.StringToHash("BigReact");
-    private static readonly int KnockedOut = Animator.StringToHash("KnockedOut");
-    private static readonly int KnockOut = Animator.StringToHash("KnockOut");
+    private static readonly int Knockout = Animator.StringToHash("KnockOut");
 
     // Start is called before the first frame update
     void Start()
@@ -59,6 +60,14 @@ public class Player1Move : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //check if dead
+        if (SaveScript.Player1Health <= 0)
+        {
+            Anim.SetTrigger("KnockedOut");
+            player1.GetComponent<Player1Actions>().enabled = false;
+            StartCoroutine(KnockedOut());
+            //this.GetComponent<Player1Move>().enabled = false;
+        }
         AnimatorListener();
         CantExitScreenBounds();
         PlayerMovement();
@@ -75,6 +84,13 @@ public class Player1Move : MonoBehaviour
         if (oppPosition.x < player1.transform.position.x)
         {
             StartCoroutine(FaceRight());
+        }
+        
+        //Reset the restrict
+        if (Restrict.gameObject.activeInHierarchy == false)
+        {
+            _walkLeftP1 = true;
+            _walkRightP1 = true;
         }
     }
 
@@ -113,8 +129,11 @@ public class Player1Move : MonoBehaviour
             {
                 if (_canWalkRight == true)
                 {
-                    Anim.SetBool(Forward,true);
-                    transform.Translate(walkSpeed,0,0);
+                    if (_walkRightP1 == true)
+                    {
+                        Anim.SetBool(Forward,true);
+                        transform.Translate(walkSpeed,0,0);
+                    }
                 }
             }
 
@@ -122,8 +141,11 @@ public class Player1Move : MonoBehaviour
             {
                 if (_canWalkLeft == true)
                 {
-                    Anim.SetBool(Backward, true);
-                    transform.Translate(-walkSpeed,0,0);
+                    if (_walkLeftP1 == true)
+                    {
+                        Anim.SetBool(Backward, true);
+                        transform.Translate(-walkSpeed,0,0);
+                    }
                 }
             }
         }
@@ -219,5 +241,11 @@ public class Player1Move : MonoBehaviour
             player1.transform.Rotate(0,-180,0);
             Anim.SetLayerWeight(1, 1);
         }
+    }
+
+    IEnumerator KnockedOut()
+    {
+        yield return new WaitForSeconds(0.1f);
+        this.GetComponent<Player1Move>().enabled = false;
     }
 }

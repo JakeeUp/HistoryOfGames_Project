@@ -8,6 +8,14 @@ TagManager:
   - FistHeavy
   - KickHeavy
   - KickLight
+  - P1SpaceDetect
+  - P2SpaceDetect
+  - P1Left
+  - P1Right
+  - P2Left
+  - P2Right
+  - Player1
+  - Player2
   layers:
   - Default
   - TransparentFX

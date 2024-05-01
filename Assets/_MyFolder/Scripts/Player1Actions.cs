@@ -7,7 +7,10 @@ public class Player1Actions : MonoBehaviour
     private Animator Anim;
     private AnimatorStateInfo Player1Layer0;
     private bool _heavyMoving = false;
+    public static bool Hits = false;
     public float punchSlideAmount = .2f;
+    public float heavyReactAmount = 10f;
+    private bool _heavyReact = false;
     private AudioSource MyPlayer;
     public AudioClip punchSound;
     public AudioClip kickSound;
@@ -45,6 +48,19 @@ public class Player1Actions : MonoBehaviour
                 Player1.transform.Translate(-punchSlideAmount * Time.deltaTime,0,0);
             }
         }
+        
+        //heavy react slide
+        if (_heavyReact == true)
+        {
+            if (Player1Move._facingRight == true)
+            {
+                Player1.transform.Translate(-heavyReactAmount * Time.deltaTime,0,0);
+            }
+            if (Player1Move._facingLeft == true)
+            {
+                Player1.transform.Translate(heavyReactAmount * Time.deltaTime,0,0);
+            }
+        }
         AnimatorListener();
 
         if (Player1Layer0.IsTag("Motion"))
@@ -52,18 +68,22 @@ public class Player1Actions : MonoBehaviour
             if(Input.GetButtonDown("Fire1"))
             {
                 Anim.SetTrigger(LightPunch);
+                Hits = false;
             }
             if(Input.GetButtonDown("Fire2"))
             {
                 Anim.SetTrigger(HeavyPunch);
+                Hits = false;
             }
             if(Input.GetButtonDown("Fire3"))
             {
                 Anim.SetTrigger(LightKick);
+                Hits = false;
             }
             if(Input.GetButtonDown("Jump"))
             {
                 Anim.SetTrigger(HeavyKick);
+                Hits = false;
             }
 
             if (Input.GetButtonDown("Block"))
@@ -85,6 +105,7 @@ public class Player1Actions : MonoBehaviour
             if(Input.GetButtonDown("Fire3"))
             {
                 Anim.SetTrigger(LightKick);
+                Hits = false;
             }
         }
         
@@ -111,6 +132,10 @@ public class Player1Actions : MonoBehaviour
     public void HeavyMove()
     {
         StartCoroutine(PunchSlide());
+    }
+    public void HeavyReaction()
+    {
+        StartCoroutine(HeavySlide());
     }
     public void FlipUp()
     {
@@ -139,5 +164,12 @@ public class Player1Actions : MonoBehaviour
         _heavyMoving = true;
         yield return new WaitForSeconds(0.05f);
         _heavyMoving = false;
+    }
+    
+    IEnumerator HeavySlide()
+    {
+        _heavyReact = true;
+        yield return new WaitForSeconds(0.05f);
+        _heavyReact = false;
     }
 }
