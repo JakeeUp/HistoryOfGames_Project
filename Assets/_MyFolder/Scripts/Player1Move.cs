@@ -39,6 +39,7 @@ public class Player1Move : MonoBehaviour
     public GameObject Restrict;
 
     public Vector3 oppPosition;
+    public GameObject WinCondition;
 
     [Header("AudioClips")] 
     public AudioClip LightPunch;
@@ -59,7 +60,16 @@ public class Player1Move : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       opponent = GameObject.Find("Player2");
+        _facingLeft = false;
+        _facingRight = true;
+        _walkLeftP1 = true;
+        _walkRightP1 = true;
+        
+        
+        
+        WinCondition = GameObject.Find("WinCondition");
+        WinCondition.gameObject.SetActive(false);
+        opponent = GameObject.Find("Player2");
         Anim = GetComponentInChildren<Animator>();
         StartCoroutine(FaceRight());
         MyPlayer = GetComponentInChildren<AudioSource>();
@@ -73,6 +83,19 @@ public class Player1Move : MonoBehaviour
         {
             Anim.SetBool(Forward,false);
             Anim.SetBool(Backward,false);
+            
+            //Get Opp Position
+            oppPosition = opponent.transform.position;
+        
+            //facing left or right of opp
+            if (oppPosition.x > player1.transform.position.x)
+            {
+                StartCoroutine(FaceLeft());
+            }
+            if (oppPosition.x < player1.transform.position.x)
+            {
+                StartCoroutine(FaceRight());
+            }
         }
         if (SaveScript.TimeOut == false)
         {
@@ -92,6 +115,8 @@ public class Player1Move : MonoBehaviour
                 player1.GetComponent<Player1Actions>().enabled = false;
                 StartCoroutine(KnockedOut());
                 //this.GetComponent<Player1Move>().enabled = false;
+                WinCondition.gameObject.SetActive(true);
+                WinCondition.gameObject.GetComponent<LoseWIn>().enabled = true;
             }
 
             if (SaveScript.Player2Health <= 0)
@@ -99,6 +124,8 @@ public class Player1Move : MonoBehaviour
                 Anim.SetTrigger("Victory");
                 player1.GetComponent<Player1Actions>().enabled = false;
                 this.GetComponent<Player1Move>().enabled = false;
+                WinCondition.gameObject.SetActive(true);
+                WinCondition.gameObject.GetComponent<LoseWIn>().enabled = true;
             }
         
         

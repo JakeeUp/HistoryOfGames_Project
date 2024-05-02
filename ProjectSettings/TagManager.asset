@@ -16,6 +16,7 @@ TagManager:
   - P2Right
   - Player1
   - Player2
+  - Win
   layers:
   - Default
   - TransparentFX

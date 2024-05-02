@@ -60,6 +60,13 @@ public class Player2Move : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
+        _facingLeftP2 = false;
+        _facingRightP2 = true;
+        _walkLeft = true;
+        _walkRight = true;
+        
+        
         opponent = GameObject.Find("Player1");
         Anim = GetComponentInChildren<Animator>();
         StartCoroutine(FaceRight());
@@ -70,69 +77,79 @@ public class Player2Move : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Player2Actions.FlyingJumpP2 == true)
+        if (SaveScript.TimeOut == true)
         {
-            walkSpeed = JumpSpeed;
+            Anim.SetBool(Forward,false);
+            Anim.SetBool(Backward,false);
         }
-        else
+
+        if (SaveScript.TimeOut == false)
         {
-            walkSpeed = MoveSpeed;
-        }
-        
-        //check if dead
-        if (SaveScript.Player2Health <= 0)
-        {
-            Anim.SetTrigger("KnockedOut");
-            player1.GetComponent<Player2Actions>().enabled = false;
-            //this.GetComponent<Player2Move>().enabled = false;
-            StartCoroutine(KnockedOut());
-        }
-        
-        if (SaveScript.Player1Health <= 0)
-        {
-            Anim.SetTrigger("Victory");
-            player1.GetComponent<Player2Actions>().enabled = false;
-            this.GetComponent<Player2Move>().enabled = false;
-        }
-        
-        
-        //Debug.Log(_walkLeft);
-        AnimatorListener();
-        CantExitScreenBounds();
-        PlayerMovement();
-        PlayerJumpAndCrouch();
-        
-        //Get Opp Position
-        oppPosition = opponent.transform.position;
-        
-        //facing left or right of opp
-        if (oppPosition.x > player1.transform.position.x)
-        {
-            StartCoroutine(FaceLeft());
-        }
-        if (oppPosition.x < player1.transform.position.x)
-        {
-            StartCoroutine(FaceRight());
-        }
-        
-        //Reset the restrict
-        if (Restrict.gameObject.activeInHierarchy == false)
-        {
-            _walkLeft = true;
-            _walkRight = true;
-        }
-        
-        if (Player1Layer0.IsTag("Block"))
-        {
-            RB.isKinematic = true;
-            BoxCollider.enabled = false;
-            CapsuleCollider.enabled = false;
-        }
-        else
-        {
-            BoxCollider.enabled = true;
-            CapsuleCollider.enabled = true;
-            RB.isKinematic = false;
+            if (Player2Actions.FlyingJumpP2 == true)
+            {
+                walkSpeed = JumpSpeed;
+            }
+            else
+            {
+                walkSpeed = MoveSpeed;
+            }
+
+            //check if dead
+            if (SaveScript.Player2Health <= 0)
+            {
+                Anim.SetTrigger("KnockedOut");
+                player1.GetComponent<Player2Actions>().enabled = false;
+                //this.GetComponent<Player2Move>().enabled = false;
+                StartCoroutine(KnockedOut());
+            }
+
+            if (SaveScript.Player1Health <= 0)
+            {
+                Anim.SetTrigger("Victory");
+                player1.GetComponent<Player2Actions>().enabled = false;
+                this.GetComponent<Player2Move>().enabled = false;
+            }
+
+
+            //Debug.Log(_walkLeft);
+            AnimatorListener();
+            CantExitScreenBounds();
+            PlayerMovement();
+            PlayerJumpAndCrouch();
+
+            //Get Opp Position
+            oppPosition = opponent.transform.position;
+
+            //facing left or right of opp
+            if (oppPosition.x > player1.transform.position.x)
+            {
+                StartCoroutine(FaceLeft());
+            }
+
+            if (oppPosition.x < player1.transform.position.x)
+            {
+                StartCoroutine(FaceRight());
+            }
+
+            //Reset the restrict
+            if (Restrict.gameObject.activeInHierarchy == false)
+            {
+                _walkLeft = true;
+                _walkRight = true;
+            }
+
+            if (Player1Layer0.IsTag("Block"))
+            {
+                RB.isKinematic = true;
+                BoxCollider.enabled = false;
+                CapsuleCollider.enabled = false;
+            }
+            else
+            {
+                BoxCollider.enabled = true;
+                CapsuleCollider.enabled = true;
+                RB.isKinematic = false;
+            }
         }
     }
 

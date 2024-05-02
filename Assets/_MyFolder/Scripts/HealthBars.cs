@@ -14,10 +14,37 @@ public class HealthBars : MonoBehaviour
     public TextMeshProUGUI TimerText;
 
     public float LevelTime = 90;
+
+    public GameObject WinCondition;
+
+    public Image P1Win1;
+    public Image P1Win2;
+    public Image P2Win1;
+    public Image P2Win2;
     // Start is called before the first frame update
     void Start()
     {
+        SaveScript.Round++;
+        SaveScript.TimeOut = false;
+        if (SaveScript.Player1Wins == 1)
+        {
+            P1Win1.gameObject.SetActive(true);
+        }
+        if (SaveScript.Player1Wins == 2)
+        {
+            P1Win1.gameObject.SetActive(true);
+            P1Win2.gameObject.SetActive(true);
+        }
         
+        if (SaveScript.Player2Wins == 1)
+        {
+            P2Win1.gameObject.SetActive(true);
+        }
+        if (SaveScript.Player2Wins == 2)
+        {
+            P2Win1.gameObject.SetActive(true);
+            P2Win2.gameObject.SetActive(true);
+        }
     }
 
     // Update is called once per frame
@@ -28,9 +55,11 @@ public class HealthBars : MonoBehaviour
             LevelTime -= 1 * Time.deltaTime;
         }
 
-        if (LevelTime <= .9)
+        if (LevelTime <= .1)
         {
             SaveScript.TimeOut = true;
+            WinCondition.gameObject.SetActive(true);
+            WinCondition.gameObject.GetComponent<LoseWIn>().enabled = true;
         }
         TimerText.text = Mathf.Round(LevelTime).ToString();
         

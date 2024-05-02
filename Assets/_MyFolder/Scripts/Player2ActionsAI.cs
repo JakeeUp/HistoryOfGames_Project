@@ -48,93 +48,103 @@ public class Player2ActionsAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //heavy punch slide
-        if (_heavyMoving == true)
+        if (SaveScript.TimeOut == false)
         {
-            if (Player2MoveAI._facingRightAI == true)
-            {
-                Player1.transform.Translate(punchSlideAmount * Time.deltaTime,0,0);
-            }
-            if (Player2MoveAI._facingLeftAI == true)
-            {
-                Player1.transform.Translate(-punchSlideAmount * Time.deltaTime,0,0);
-            }
-        }
-        
-        //heavy react slide
-        if (_heavyReact == true)
-        {
-            if (Player2MoveAI._facingRightAI == true)
-            {
-                Player1.transform.Translate(-heavyReactAmount * Time.deltaTime,0,0);
-            }
-            if (Player2MoveAI._facingLeftAI == true)
-            {
-                Player1.transform.Translate(heavyReactAmount * Time.deltaTime,0,0);
-            }
-        }
-        
-        
-        AnimatorListener();
 
-        if (Player1Layer0.IsTag("Motion"))
-        {
-            if (Attacking == true)
+
+            //heavy punch slide
+            if (_heavyMoving == true)
             {
-                Attacking = false;
-                if(AttackNumber == 1)
+                if (Player2MoveAI._facingRightAI == true)
                 {
-                    Anim.SetTrigger(LightPunch);
-                    HitsAI = false;
+                    Player1.transform.Translate(punchSlideAmount * Time.deltaTime, 0, 0);
                 }
-                if(AttackNumber == 2)
+
+                if (Player2MoveAI._facingLeftAI == true)
                 {
-                    Anim.SetTrigger(HeavyPunch);
-                    HitsAI = false;
+                    Player1.transform.Translate(-punchSlideAmount * Time.deltaTime, 0, 0);
                 }
-                if(AttackNumber == 3)
+            }
+
+            //heavy react slide
+            if (_heavyReact == true)
+            {
+                if (Player2MoveAI._facingRightAI == true)
                 {
-                    Anim.SetTrigger(LightKick);
-                    HitsAI = false;
+                    Player1.transform.Translate(-heavyReactAmount * Time.deltaTime, 0, 0);
                 }
-                if(AttackNumber == 4)
+
+                if (Player2MoveAI._facingLeftAI == true)
+                {
+                    Player1.transform.Translate(heavyReactAmount * Time.deltaTime, 0, 0);
+                }
+            }
+
+
+            AnimatorListener();
+
+            if (Player1Layer0.IsTag("Motion"))
+            {
+                if (Attacking == true)
+                {
+                    Attacking = false;
+                    if (AttackNumber == 1)
+                    {
+                        Anim.SetTrigger(LightPunch);
+                        HitsAI = false;
+                    }
+
+                    if (AttackNumber == 2)
+                    {
+                        Anim.SetTrigger(HeavyPunch);
+                        HitsAI = false;
+                    }
+
+                    if (AttackNumber == 3)
+                    {
+                        Anim.SetTrigger(LightKick);
+                        HitsAI = false;
+                    }
+
+                    if (AttackNumber == 4)
+                    {
+                        Anim.SetTrigger(HeavyKick);
+                        HitsAI = false;
+                    }
+                }
+
+
+                if (Input.GetButtonDown("BlockP2"))
+                {
+                    Anim.SetTrigger(BlockOn);
+                }
+            }
+
+            if (Player1Layer0.IsTag("Block"))
+            {
+                if (Input.GetButtonUp("BlockP2"))
+                {
+                    Anim.SetTrigger(BlockOff);
+                }
+            }
+
+            if (Player1Layer0.IsTag("Crouching"))
+            {
+
+                Anim.SetTrigger(LightKick);
+                HitsAI = false;
+                Anim.SetBool("Crouch", false);
+
+            }
+
+            //Air moves
+            if (Player1Layer0.IsTag("Jumping"))
+            {
+                if (Input.GetButtonDown("Fire4P2"))
                 {
                     Anim.SetTrigger(HeavyKick);
                     HitsAI = false;
                 }
-            }
-           
-
-            if (Input.GetButtonDown("BlockP2"))
-            {
-                Anim.SetTrigger(BlockOn);
-            }
-        }
-
-        if (Player1Layer0.IsTag("Block"))
-        {
-            if (Input.GetButtonUp("BlockP2"))
-            {
-                Anim.SetTrigger(BlockOff);
-            }
-        }
-
-        if (Player1Layer0.IsTag("Crouching"))
-        {
-           
-                Anim.SetTrigger(LightKick);
-                HitsAI = false;
-                Anim.SetBool("Crouch", false);
-            
-        }
-        
-        //Air moves
-        if (Player1Layer0.IsTag("Jumping"))
-        {
-            if(Input.GetButtonDown("Fire4P2"))
-            {
-                Anim.SetTrigger(HeavyKick);
-                HitsAI = false;
             }
         }
     }

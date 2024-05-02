@@ -38,89 +38,92 @@ public class Player1Actions : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (SaveScript.TimeOut == false)
+        {
+                 //heavy punch slide
+            if (_heavyMoving == true)
+            {
+                if (Player1Move._facingRight == true)
+                {
+                    Player1.transform.Translate(punchSlideAmount * Time.deltaTime,0,0);
+                }
+                if (Player1Move._facingLeft == true)
+                {
+                    Player1.transform.Translate(-punchSlideAmount * Time.deltaTime,0,0);
+                }
+            }
+            
+            //heavy react slide
+            if (_heavyReact == true)
+            {
+                if (Player1Move._facingRight == true)
+                {
+                    Player1.transform.Translate(-heavyReactAmount * Time.deltaTime,0,0);
+                }
+                if (Player1Move._facingLeft == true)
+                {
+                    Player1.transform.Translate(heavyReactAmount * Time.deltaTime,0,0);
+                }
+            }
+            AnimatorListener();
+
+            if (Player1Layer0.IsTag("Motion"))
+            {
+                if(Input.GetButtonDown("Fire1"))
+                {
+                    Anim.SetTrigger(LightPunch);
+                    Hits = false;
+                }
+                if(Input.GetButtonDown("Fire2"))
+                {
+                    Anim.SetTrigger(HeavyPunch);
+                    Hits = false;
+                }
+                if(Input.GetButtonDown("Fire3"))
+                {
+                    Anim.SetTrigger(LightKick);
+                    Hits = false;
+                }
+                if(Input.GetButtonDown("Jump"))
+                {
+                    Anim.SetTrigger(HeavyKick);
+                    Hits = false;
+                }
+
+                if (Input.GetButtonDown("Block"))
+                {
+                    Anim.SetTrigger(BlockOn);
+                }
+            }
+
+            if (Player1Layer0.IsTag("Block"))
+            {
+                if (Input.GetButtonUp("Block"))
+                {
+                    Anim.SetTrigger(BlockOff);
+                }
+            }
+
+            if (Player1Layer0.IsTag("Crouching"))
+            {
+                if(Input.GetButtonDown("Fire3"))
+                {
+                    Anim.SetTrigger(LightKick);
+                    Hits = false;
+                }
+            }
+            
+            //Air moves
+            if (Player1Layer0.IsTag("Jumping"))
+            {
+                if(Input.GetButtonDown("Jump"))
+                {
+                    Anim.SetTrigger(HeavyKick);
+                }
+            }
+        }
+        
        
-        
-        //heavy punch slide
-        if (_heavyMoving == true)
-        {
-            if (Player1Move._facingRight == true)
-            {
-                Player1.transform.Translate(punchSlideAmount * Time.deltaTime,0,0);
-            }
-            if (Player1Move._facingLeft == true)
-            {
-                Player1.transform.Translate(-punchSlideAmount * Time.deltaTime,0,0);
-            }
-        }
-        
-        //heavy react slide
-        if (_heavyReact == true)
-        {
-            if (Player1Move._facingRight == true)
-            {
-                Player1.transform.Translate(-heavyReactAmount * Time.deltaTime,0,0);
-            }
-            if (Player1Move._facingLeft == true)
-            {
-                Player1.transform.Translate(heavyReactAmount * Time.deltaTime,0,0);
-            }
-        }
-        AnimatorListener();
-
-        if (Player1Layer0.IsTag("Motion"))
-        {
-            if(Input.GetButtonDown("Fire1"))
-            {
-                Anim.SetTrigger(LightPunch);
-                Hits = false;
-            }
-            if(Input.GetButtonDown("Fire2"))
-            {
-                Anim.SetTrigger(HeavyPunch);
-                Hits = false;
-            }
-            if(Input.GetButtonDown("Fire3"))
-            {
-                Anim.SetTrigger(LightKick);
-                Hits = false;
-            }
-            if(Input.GetButtonDown("Jump"))
-            {
-                Anim.SetTrigger(HeavyKick);
-                Hits = false;
-            }
-
-            if (Input.GetButtonDown("Block"))
-            {
-                Anim.SetTrigger(BlockOn);
-            }
-        }
-
-        if (Player1Layer0.IsTag("Block"))
-        {
-            if (Input.GetButtonUp("Block"))
-            {
-                Anim.SetTrigger(BlockOff);
-            }
-        }
-
-        if (Player1Layer0.IsTag("Crouching"))
-        {
-            if(Input.GetButtonDown("Fire3"))
-            {
-                Anim.SetTrigger(LightKick);
-                Hits = false;
-            }
-        }
-        
-        //Air moves
-        if (Player1Layer0.IsTag("Jumping"))
-        {
-            if(Input.GetButtonDown("Jump"))
-            {
-                Anim.SetTrigger(HeavyKick);
-            }
-        }
     }
 
     private void AnimatorListener()

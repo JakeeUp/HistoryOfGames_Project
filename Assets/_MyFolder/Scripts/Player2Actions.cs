@@ -38,88 +38,93 @@ public class Player2Actions : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //heavy punch slide
-        if (_heavyMoving == true)
+        if (SaveScript.TimeOut == false)
         {
-            if (Player2Move._facingRightP2 == true)
-            {
-                Player1.transform.Translate(punchSlideAmount * Time.deltaTime,0,0);
-            }
-            if (Player2Move._facingLeftP2 == true)
-            {
-                Player1.transform.Translate(-punchSlideAmount * Time.deltaTime,0,0);
-            }
-        }
+            
         
-        //heavy react slide
-        if (_heavyReact == true)
-        {
-            if (Player2Move._facingRightP2 == true)
+            //heavy punch slide
+            if (_heavyMoving == true)
             {
-                Player1.transform.Translate(-heavyReactAmount * Time.deltaTime,0,0);
+                if (Player2Move._facingRightP2 == true)
+                {
+                    Player1.transform.Translate(punchSlideAmount * Time.deltaTime,0,0);
+                }
+                if (Player2Move._facingLeftP2 == true)
+                {
+                    Player1.transform.Translate(-punchSlideAmount * Time.deltaTime,0,0);
+                }
             }
-            if (Player2Move._facingLeftP2 == true)
+            
+            //heavy react slide
+            if (_heavyReact == true)
             {
-                Player1.transform.Translate(heavyReactAmount * Time.deltaTime,0,0);
+                if (Player2Move._facingRightP2 == true)
+                {
+                    Player1.transform.Translate(-heavyReactAmount * Time.deltaTime,0,0);
+                }
+                if (Player2Move._facingLeftP2 == true)
+                {
+                    Player1.transform.Translate(heavyReactAmount * Time.deltaTime,0,0);
+                }
             }
-        }
-        
-        
-        AnimatorListener();
+            
+            
+            AnimatorListener();
 
-        if (Player1Layer0.IsTag("Motion"))
-        {
-            if(Input.GetButtonDown("Fire1P2"))
+            if (Player1Layer0.IsTag("Motion"))
             {
-                Anim.SetTrigger(LightPunch);
-                Hits = false;
-            }
-            if(Input.GetButtonDown("Fire2P2"))
-            {
-                Anim.SetTrigger(HeavyPunch);
-                Hits = false;
-            }
-            if(Input.GetButtonDown("Fire3P2"))
-            {
-                Anim.SetTrigger(LightKick);
-                Hits = false;
-            }
-            if(Input.GetButtonDown("Fire4P2"))
-            {
-                Anim.SetTrigger(HeavyKick);
-                Hits = false;
+                if(Input.GetButtonDown("Fire1P2"))
+                {
+                    Anim.SetTrigger(LightPunch);
+                    Hits = false;
+                }
+                if(Input.GetButtonDown("Fire2P2"))
+                {
+                    Anim.SetTrigger(HeavyPunch);
+                    Hits = false;
+                }
+                if(Input.GetButtonDown("Fire3P2"))
+                {
+                    Anim.SetTrigger(LightKick);
+                    Hits = false;
+                }
+                if(Input.GetButtonDown("Fire4P2"))
+                {
+                    Anim.SetTrigger(HeavyKick);
+                    Hits = false;
+                }
+
+                if (Input.GetButtonDown("BlockP2"))
+                {
+                    Anim.SetTrigger(BlockOn);
+                }
             }
 
-            if (Input.GetButtonDown("BlockP2"))
+            if (Player1Layer0.IsTag("Block"))
             {
-                Anim.SetTrigger(BlockOn);
+                if (Input.GetButtonUp("BlockP2"))
+                {
+                    Anim.SetTrigger(BlockOff);
+                }
             }
-        }
 
-        if (Player1Layer0.IsTag("Block"))
-        {
-            if (Input.GetButtonUp("BlockP2"))
+            if (Player1Layer0.IsTag("Crouching"))
             {
-                Anim.SetTrigger(BlockOff);
+                if(Input.GetButtonDown("Fire3P2"))
+                {
+                    Anim.SetTrigger(LightKick);
+                    Hits = false;
+                }
             }
-        }
-
-        if (Player1Layer0.IsTag("Crouching"))
-        {
-            if(Input.GetButtonDown("Fire3P2"))
+            
+            //Air moves
+            if (Player1Layer0.IsTag("Jumping"))
             {
-                Anim.SetTrigger(LightKick);
-                Hits = false;
-            }
-        }
-        
-        //Air moves
-        if (Player1Layer0.IsTag("Jumping"))
-        {
-            if(Input.GetButtonDown("Fire4P2"))
-            {
-                Anim.SetTrigger(HeavyKick);
-                Hits = false;
+                if(Input.GetButtonDown("Fire4P2"))
+                {
+                    Anim.SetTrigger(HeavyKick);
+                    Hits = false;
+                }
             }
         }
     }

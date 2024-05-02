@@ -67,6 +67,10 @@ public class Player2MoveAI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _facingLeftAI = false;
+        _facingRightAI = true;
+        _walkLeftAI = true;
+        _walkRightAI = true;
         opponent = GameObject.Find("Player1");
         Anim = GetComponentInChildren<Animator>();
         StartCoroutine(FaceRight());
@@ -77,53 +81,104 @@ public class Player2MoveAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        OppDistance = Vector3.Distance(opponent.transform.position, player1.transform.position);
-        
-        
-        if (Player2Actions.FlyingJumpP2 == true)
+        if (SaveScript.TimeOut == true)
         {
-            walkSpeed = JumpSpeed;
+            Anim.SetBool(Forward,false);
+            Anim.SetBool(Backward,false);
         }
-        else
-        {
-            walkSpeed = MoveSpeed;
-        }
-        
-        //check if dead
-        if (SaveScript.Player2Health <= 0)
-        {
-            Anim.SetTrigger("KnockedOut");
-            player1.GetComponent<Player2ActionsAI>().enabled = false;
-            //this.GetComponent<Player2Move>().enabled = false;
-            StartCoroutine(KnockedOut());
-        }
-        
-        if (SaveScript.Player1Health <= 0)
-        {
-            Anim.SetTrigger("Victory");
-            player1.GetComponent<Player2ActionsAI>().enabled = false;
-            this.GetComponent<Player2MoveAI>().enabled = false;
-        }
-        
-        
-        //Debug.Log(_walkLeft);
-        AnimatorListener();
-        CantExitScreenBounds();
-        //PlayerMovement();
-        PlayerJumpAndCrouch();
-        
-        //Get Opp Position
-        oppPosition = opponent.transform.position;
 
-        if (Player2ActionsAI.Dazed == false)
+        if (SaveScript.TimeOut == false)
         {
+            OppDistance = Vector3.Distance(opponent.transform.position, player1.transform.position);
 
 
-            //facing left or right of opp
-            if (oppPosition.x > player1.transform.position.x)
+            if (Player2Actions.FlyingJumpP2 == true)
+            {
+                walkSpeed = JumpSpeed;
+            }
+            else
+            {
+                walkSpeed = MoveSpeed;
+            }
+
+            //check if dead
+            if (SaveScript.Player2Health <= 0)
+            {
+                Anim.SetTrigger("KnockedOut");
+                player1.GetComponent<Player2ActionsAI>().enabled = false;
+                //this.GetComponent<Player2Move>().enabled = false;
+                StartCoroutine(KnockedOut());
+            }
+
+            if (SaveScript.Player1Health <= 0)
+            {
+                Anim.SetTrigger("Victory");
+                player1.GetComponent<Player2ActionsAI>().enabled = false;
+                this.GetComponent<Player2MoveAI>().enabled = false;
+            }
+
+
+            //Debug.Log(_walkLeft);
+            AnimatorListener();
+            CantExitScreenBounds();
+            //PlayerMovement();
+            PlayerJumpAndCrouch();
+
+            //Get Opp Position
+            oppPosition = opponent.transform.position;
+
+            if (Player2ActionsAI.Dazed == false)
             {
 
-                StartCoroutine(FaceLeft());
+
+                //facing left or right of opp
+                if (oppPosition.x > player1.transform.position.x)
+                {
+
+                    StartCoroutine(FaceLeft());
+
+                    if (Player1Layer0.IsTag("Motion"))
+                    {
+                        Time.timeScale = 1.0f;
+                        Anim.SetBool("CanAttack", false);
+                        if (OppDistance > AttackDistance)
+                        {
+                            if (MoveAI == true)
+                            {
+                                if (_canWalkRight == true)
+                                {
+                                    if (_walkRightAI == true)
+                                    {
+                                        Anim.SetBool(Forward, true);
+                                        Anim.SetBool(Backward, false);
+                                        AttackState = false;
+                                        transform.Translate(walkSpeed, 0, 0);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (OppDistance < AttackDistance)
+                    {
+                        if (_canWalkRight == true)
+                        {
+                            if (MoveAI == true)
+                            {
+                                MoveAI = false;
+                                Anim.SetBool(Forward, false);
+                                Anim.SetBool(Backward, false);
+                                Anim.SetBool("CanAttack", true);
+                                StartCoroutine(ForwardFalse());
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (oppPosition.x < player1.transform.position.x)
+            {
+                StartCoroutine(FaceRight());
 
                 if (Player1Layer0.IsTag("Motion"))
                 {
@@ -133,14 +188,14 @@ public class Player2MoveAI : MonoBehaviour
                     {
                         if (MoveAI == true)
                         {
-                            if (_canWalkRight == true)
+                            if (_canWalkLeft == true)
                             {
-                                if (_walkRightAI == true)
+                                if (_walkLeftAI == true)
                                 {
-                                    Anim.SetBool(Forward, true);
-                                    Anim.SetBool(Backward, false);
+                                    Anim.SetBool(Forward, false);
+                                    Anim.SetBool(Backward, true);
                                     AttackState = false;
-                                    transform.Translate(walkSpeed, 0, 0);
+                                    transform.Translate(-walkSpeed, 0, 0);
                                 }
                             }
                         }
@@ -149,7 +204,7 @@ public class Player2MoveAI : MonoBehaviour
 
                 if (OppDistance < AttackDistance)
                 {
-                    if (_canWalkRight == true)
+                    if (_canWalkLeft == true)
                     {
                         if (MoveAI == true)
                         {
@@ -162,68 +217,26 @@ public class Player2MoveAI : MonoBehaviour
                     }
                 }
             }
-        }
 
-        if (oppPosition.x < player1.transform.position.x)
-        {
-            StartCoroutine(FaceRight());
-            
-            if (Player1Layer0.IsTag("Motion"))
+            //Reset the restrict
+            if (Restrict.gameObject.activeInHierarchy == false)
             {
-                Time.timeScale = 1.0f;
-                Anim.SetBool("CanAttack",false);
-                if (OppDistance > AttackDistance)
-                {
-                    if (MoveAI == true)
-                    {
-                        if (_canWalkLeft == true)
-                        {
-                            if (_walkLeftAI == true)
-                            {
-                                Anim.SetBool(Forward, false);
-                                Anim.SetBool(Backward,true);
-                                AttackState = false;
-                                transform.Translate(-walkSpeed, 0, 0);
-                            }
-                        }
-                    }
-                }
+                _walkLeftAI = true;
+                _walkRightAI = true;
             }
 
-            if (OppDistance < AttackDistance)
+            if (Player1Layer0.IsTag("Block"))
             {
-                if (_canWalkLeft == true)
-                {
-                    if (MoveAI == true)
-                    {
-                        MoveAI = false;
-                        Anim.SetBool(Forward, false);
-                        Anim.SetBool(Backward,false);
-                        Anim.SetBool("CanAttack",true);
-                        StartCoroutine(ForwardFalse());
-                    }
-                }
+                RB.isKinematic = true;
+                BoxCollider.enabled = false;
+                CapsuleCollider.enabled = false;
             }
-        }
-        
-        //Reset the restrict
-        if (Restrict.gameObject.activeInHierarchy == false)
-        {
-            _walkLeftAI = true;
-            _walkRightAI = true;
-        }
-        
-        if (Player1Layer0.IsTag("Block"))
-        {
-            RB.isKinematic = true;
-            BoxCollider.enabled = false;
-            CapsuleCollider.enabled = false;
-        }
-        else
-        {
-            BoxCollider.enabled = true;
-            CapsuleCollider.enabled = true;
-            RB.isKinematic = false;
+            else
+            {
+                BoxCollider.enabled = true;
+                CapsuleCollider.enabled = true;
+                RB.isKinematic = false;
+            }
         }
     }
 

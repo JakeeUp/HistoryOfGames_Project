@@ -1030,6 +1030,7 @@ MonoBehaviour:
   EmitFX: 1
   Particles: {fileID: 0}
   ParticleType: Player2Particles
+  Player1: 1
 --- !u!1 &2546046885210665866
 GameObject:
   m_ObjectHideFlags: 0
@@ -1143,6 +1144,7 @@ MonoBehaviour:
   EmitFX: 1
   Particles: {fileID: 0}
   ParticleType: Player2Particles
+  Player1: 1
 --- !u!1 &2546046885247146820
 GameObject:
   m_ObjectHideFlags: 0
@@ -1446,6 +1448,7 @@ MonoBehaviour:
   EmitFX: 1
   Particles: {fileID: 0}
   ParticleType: Player2Particles
+  Player1: 1
 --- !u!1 &2546046885731075341
 GameObject:
   m_ObjectHideFlags: 0
@@ -1586,6 +1589,7 @@ MonoBehaviour:
   opponent: {fileID: 0}
   Restrict: {fileID: 2546046886405909541}
   oppPosition: {x: 0, y: 0, z: 0}
+  WinCondition: {fileID: 0}
   LightPunch: {fileID: 8300000, guid: aee57836f6748204d91589459d4db6b1, type: 3}
   HeavyPunch: {fileID: 8300000, guid: be991185db043b8499c83bcd2770b1e4, type: 3}
   LightKick: {fileID: 8300000, guid: ff28e08a436788e4882069d426882736, type: 3}
@@ -1716,6 +1720,7 @@ MonoBehaviour:
   EmitFX: 1
   Particles: {fileID: 0}
   ParticleType: Player2Particles
+  Player1: 1
 --- !u!1 &2546046886207116158
 GameObject:
   m_ObjectHideFlags: 0
@@ -6857,6 +6862,7 @@ MonoBehaviour:
   EmitFX: 1
   Particles: {fileID: 0}
   ParticleType: Player2Particles
+  Player1: 1
 --- !u!1 &2546046886632958669
 GameObject:
   m_ObjectHideFlags: 0
@@ -6970,6 +6976,7 @@ MonoBehaviour:
   EmitFX: 1
   Particles: {fileID: 0}
   ParticleType: Player2Particles
+  Player1: 1
 --- !u!1 &2546046886878132774
 GameObject:
   m_ObjectHideFlags: 0
@@ -7083,6 +7090,7 @@ MonoBehaviour:
   EmitFX: 1
   Particles: {fileID: 0}
   ParticleType: Player2Particles
+  Player1: 1
 --- !u!1 &2546046886941152958
 GameObject:
   m_ObjectHideFlags: 0
@@ -7196,6 +7204,7 @@ MonoBehaviour:
   EmitFX: 1
   Particles: {fileID: 0}
   ParticleType: Player2Particles
+  Player1: 1
 --- !u!1 &2555217978015216343
 GameObject:
   m_ObjectHideFlags: 0
