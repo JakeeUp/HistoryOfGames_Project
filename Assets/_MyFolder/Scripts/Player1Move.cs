@@ -20,6 +20,8 @@ public class Player1Move : MonoBehaviour
     public Collider CapsuleCollider;
     public float JumpSpeed = 0.05f;
     private float MoveSpeed;
+    private float Timer = 2.0f;
+    private float CrouchTime = 0.0f;
     
 
     [Header("Bools")]
@@ -57,7 +59,7 @@ public class Player1Move : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       
+       opponent = GameObject.Find("Player2");
         Anim = GetComponentInChildren<Animator>();
         StartCoroutine(FaceRight());
         MyPlayer = GetComponentInChildren<AudioSource>();
@@ -67,69 +69,86 @@ public class Player1Move : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Player1Actions.FlyingJumpP1 == true)
+        if (SaveScript.TimeOut == true)
         {
-            walkSpeed = JumpSpeed;
+            Anim.SetBool(Forward,false);
+            Anim.SetBool(Backward,false);
         }
-        else
+        if (SaveScript.TimeOut == false)
         {
-            walkSpeed = MoveSpeed;
-        }
+            if (Player1Actions.FlyingJumpP1 == true)
+            {
+                walkSpeed = JumpSpeed;
+            }
+            else
+            {
+                walkSpeed = MoveSpeed;
+            }
         
-        //check if dead
-        if (SaveScript.Player1Health <= 0)
-        {
-            Anim.SetTrigger("KnockedOut");
-            player1.GetComponent<Player1Actions>().enabled = false;
-            StartCoroutine(KnockedOut());
-            //this.GetComponent<Player1Move>().enabled = false;
-        }
+            //check if dead
+            if (SaveScript.Player1Health <= 0)
+            {
+                Anim.SetTrigger("KnockedOut");
+                player1.GetComponent<Player1Actions>().enabled = false;
+                StartCoroutine(KnockedOut());
+                //this.GetComponent<Player1Move>().enabled = false;
+            }
 
-        if (SaveScript.Player2Health <= 0)
-        {
-            Anim.SetTrigger("Victory");
-            player1.GetComponent<Player1Actions>().enabled = false;
-            this.GetComponent<Player1Move>().enabled = false;
-        }
+            if (SaveScript.Player2Health <= 0)
+            {
+                Anim.SetTrigger("Victory");
+                player1.GetComponent<Player1Actions>().enabled = false;
+                this.GetComponent<Player1Move>().enabled = false;
+            }
         
         
         
-        AnimatorListener();
-        CantExitScreenBounds();
-        PlayerMovement();
-        PlayerJumpAndCrouch();
+            AnimatorListener();
+            CantExitScreenBounds();
+            PlayerMovement();
+            PlayerJumpAndCrouch();
         
-        //Get Opp Position
-        oppPosition = opponent.transform.position;
+            //Get Opp Position
+            oppPosition = opponent.transform.position;
         
-        //facing left or right of opp
-        if (oppPosition.x > player1.transform.position.x)
-        {
-            StartCoroutine(FaceLeft());
-        }
-        if (oppPosition.x < player1.transform.position.x)
-        {
-            StartCoroutine(FaceRight());
-        }
+            //facing left or right of opp
+            if (oppPosition.x > player1.transform.position.x)
+            {
+                StartCoroutine(FaceLeft());
+            }
+            if (oppPosition.x < player1.transform.position.x)
+            {
+                StartCoroutine(FaceRight());
+            }
         
-        //Reset the restrict
-        if (Restrict.gameObject.activeInHierarchy == false)
-        {
-            _walkLeftP1 = true;
-            _walkRightP1 = true;
-        }
+            //Reset the restrict
+            if (Restrict.gameObject.activeInHierarchy == false)
+            {
+                _walkLeftP1 = true;
+                _walkRightP1 = true;
+            }
 
-        if (Player1Layer0.IsTag("Block"))
-        {
-            RB.isKinematic = true;
-            BoxCollider.enabled = false;
-            CapsuleCollider.enabled = false;
-        }
-        else
-        {
-            BoxCollider.enabled = true;
-            CapsuleCollider.enabled = true;
-            RB.isKinematic = false;
+            if (Player1Layer0.IsTag("Block"))
+            {
+                RB.isKinematic = true;
+                BoxCollider.enabled = false;
+                CapsuleCollider.enabled = false;
+            }
+            else if(Player1Layer0.IsTag("Motion"))
+            {
+                BoxCollider.enabled = true;
+                CapsuleCollider.enabled = true;
+                RB.isKinematic = false;
+            }
+
+            if (Player1Layer0.IsTag("Crouching"))
+            {
+                BoxCollider.enabled = false;
+            }
+            if (Player1Layer0.IsTag("Sweep"))
+            {
+                BoxCollider.enabled = false;
+            }
         }
     }
 
@@ -149,12 +168,22 @@ public class Player1Move : MonoBehaviour
 
         if (Input.GetAxis("Vertical") < 0)
         {
-            Anim.SetBool(Crouch,true);
+            if (CrouchTime < Timer)
+            {
+                CrouchTime += 1.0f * Time.deltaTime;
+                Anim.SetBool(Crouch,true);
+            }
+            else if (CrouchTime > Timer)
+            {
+                Anim.SetBool(Crouch,false);
+                StartCoroutine(ResetCrouchTime());
+            }
         }
 
         if (Input.GetAxis("Vertical") == 0)
         {
             Anim.SetBool(Crouch,false);
+            CrouchTime = 0.0f;
         }
     }
 
@@ -164,6 +193,7 @@ public class Player1Move : MonoBehaviour
 
         if (Player1Layer0.IsTag("Motion"))
         {
+            Time.timeScale = 1.0f;
             if (Input.GetAxis("Horizontal") > 0)
             {
                 if (_canWalkRight == true)
@@ -286,5 +316,11 @@ public class Player1Move : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         this.GetComponent<Player1Move>().enabled = false;
+    }
+
+    IEnumerator ResetCrouchTime()
+    {
+        yield return new WaitForSeconds(2.0f);
+        CrouchTime = 0.0f;
     }
 }

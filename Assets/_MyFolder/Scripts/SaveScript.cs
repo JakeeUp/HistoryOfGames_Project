@@ -9,6 +9,8 @@ public class SaveScript : MonoBehaviour
 
     public static float Player1Timer = 2.0f;
     public static float Player2Timer = 2.0f;
+
+    public static bool TimeOut = false;
     // Start is called before the first frame update
     void Start()
     {

@@ -60,7 +60,7 @@ public class Player2Move : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       
+        opponent = GameObject.Find("Player1");
         Anim = GetComponentInChildren<Animator>();
         StartCoroutine(FaceRight());
         MyPlayer = GetComponentInChildren<AudioSource>();
@@ -82,7 +82,7 @@ public class Player2Move : MonoBehaviour
         //check if dead
         if (SaveScript.Player2Health <= 0)
         {
-            Anim.SetTrigger(Knockout);
+            Anim.SetTrigger("KnockedOut");
             player1.GetComponent<Player2Actions>().enabled = false;
             //this.GetComponent<Player2Move>().enabled = false;
             StartCoroutine(KnockedOut());
