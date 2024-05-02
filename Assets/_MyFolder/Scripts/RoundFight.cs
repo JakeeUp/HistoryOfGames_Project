@@ -87,7 +87,7 @@ public class RoundFight : MonoBehaviour
 
         if (SaveScript.Round >= 4)
         {
-            SceneManager.LoadScene(2);
+            SceneManager.LoadScene(0);
             Debug.Log("Loading back to menu");
         }
     }

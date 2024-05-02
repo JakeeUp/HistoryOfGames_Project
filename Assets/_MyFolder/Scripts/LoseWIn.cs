@@ -13,7 +13,7 @@ public class LoseWIn : MonoBehaviour
     public AudioClip Player1WindAudio;
     public AudioClip Player2WindAudio;
     public float PauseTime = 1.0f;
-    private int Scene = 0;
+    private int Scene = 1;
     // Start is called before the first frame update
     void Start()
     {
@@ -73,11 +73,15 @@ public class LoseWIn : MonoBehaviour
 
         if (SaveScript.Player1Wins >= 2)
         {
+            yield return new WaitForSeconds(PauseTime);
             Debug.Log("Player 1 won");
+            SceneManager.LoadScene(0);
         }
         if (SaveScript.Player2Wins >= 2)
         {
+            yield return new WaitForSeconds(PauseTime);
             Debug.Log("Player 2 won");
+            SceneManager.LoadScene(0);
         }
         yield return new WaitForSeconds(PauseTime);
         SceneManager.LoadScene(Scene);
